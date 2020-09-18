@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import * as dc from 'dc';
 import * as crossfilter from 'crossfilter';
+import { scatterplotdata } from './utilities/chartdata';
 import { iif } from 'rxjs';
 
 @Component({
@@ -11,6 +12,8 @@ import { iif } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   title = 'scatterplot';
+  upper = scatterplotdata.ChartAttributesData.num_outlier_data.number_of_reviews.upper;
+  normal = scatterplotdata.ChartAttributesData.num_outlier_data.number_of_reviews.normal;
   experiments = [
     {
       "": "001",
@@ -614,6 +617,7 @@ export class AppComponent implements OnInit {
     }
   ]
   ngOnInit() {
+    console.log(this.upper);
     var chart = dc.scatterPlot("#scatter");
     var speedlist = [];
     var i = 0;
@@ -621,7 +625,6 @@ export class AppComponent implements OnInit {
       x.Speed = +x.Speed;
       speedlist[i++] = x.Speed;
     });
-    console.log(speedlist);
     var min = Math.min(...speedlist);
     var max = Math.max(...speedlist);
     var ndx = crossfilter(this.experiments),
@@ -636,7 +639,7 @@ export class AppComponent implements OnInit {
       .colorAccessor(function (d: any, i: any) {
         let speed = d.key[0];
         let expt = d.key[1];
-        if (speed > 1000 && expt > 3)
+        if (speed > 900 && expt > 3)
           return "outlier";
         else
           return "normal";
@@ -644,14 +647,17 @@ export class AppComponent implements OnInit {
       .brushOn(false)
       .symbolSize(10)
       .clipPadding(0)
-      .xAxisLabel("Speed")
+      .xAxisLabel("Speed", 20)
       .yAxisLabel("EXPT")
       .dimension(runDimension)
       .group(speedSumGroup)
-      .colors(d3.scaleOrdinal().domain(["normal", "outliers"]))
-      .range(["green", "red"]);
-
+      .colors(d3.scaleOrdinal().domain(["normal", "outlier"])
+        .range(["yellow", "red"]));
+    chart.renderlet(function (chart) {
+      // rotate x-axis labels
+      chart.selectAll('g.x text')
+        .attr('transform', 'translate(-10,10) rotate(315)');
+    });
     chart.render();
-
   }
 }
