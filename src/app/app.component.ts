@@ -12,8 +12,6 @@ import { iif } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   title = 'scatterplot';
-  upper = scatterplotdata.ChartAttributesData.num_outlier_data.number_of_reviews.upper;
-  normal = scatterplotdata.ChartAttributesData.num_outlier_data.number_of_reviews.normal;
   experiments = [
     {
       "": "001",
@@ -617,7 +615,6 @@ export class AppComponent implements OnInit {
     }
   ]
   ngOnInit() {
-    console.log(this.upper);
     var chart = dc.scatterPlot("#scatter");
     var speedlist = [];
     var i = 0;
