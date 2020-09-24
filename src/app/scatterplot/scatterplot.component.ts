@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import * as dc from 'dc';
 import * as crossfilter from 'crossfilter';
-import * as chartData from 'src/assets/chartData.json';
-import * as mockData from 'src/assets/mockData.json';
+import { ScatterService } from './scatter.service';
+import * as data from '../../assets/numericOutliersSortByOutlier.json'
 
 @Component({
   selector: 'app-scatterplot',
@@ -11,58 +11,61 @@ import * as mockData from 'src/assets/mockData.json';
   styleUrls: ['./scatterplot.component.css']
 })
 export class ScatterplotComponent implements OnInit {
-  products: any = (chartData as any).default;
-  experiments: any = (mockData as any).default;
-
-  ngOnInit() {
-    console.log(this.products);
-
+  constructor(private service: ScatterService) { }
+  mockdata: any = (data as any).default;
+  ngOnInit(): void {
+    var graphdiv = document.getElementById("scatter")
+    var width = graphdiv.offsetWidth;
+    var height = 500;
+    this.drawchart(this.mockdata, width, height);
+  }
+  drawchart(data, width, height) {
     dc.config.defaultColors(d3.schemeSet1);
 
     var chart = dc.scatterPlot('#scatter');
 
-    var speedlist = [];
-    var i = 0;
-    this.experiments.forEach(function (x) {
-      x.Speed = +x.Speed;
-      speedlist[i++] = x.Speed;
+    var xlist = [];
+    var outlierlist = [];
+    var i = 0, j = 0, c = 0;
+    data.forEach(function (x) {
+      xlist[i++] = x.xAxis;
+      outlierlist[j++] = x.outlier;
     });
-    var min = Math.min(...speedlist);
-    var max = Math.max(...speedlist);
-    var ndx = crossfilter(this.experiments),
+    var min = Math.min(...xlist);
+    var max = Math.max(...xlist);
+    var ndx = crossfilter(data),
       runDimension = ndx.dimension(function (d) {
-        return [+d.Speed, +d.Expt];
+        return [d.xAxis, d.yAxis, d.outlier];
       }),
       speedSumGroup = runDimension.group();
 
     chart
-      .width(500)
-      .height(400)
+      .width(width)
+      .height(height)
       .renderHorizontalGridLines(true)
       .renderVerticalGridLines(true)
-      .x(d3.scaleLinear().domain([min - 10, max + 10]))
-      .colorAccessor(function (d: any, i: any) {
-        let speed = d.key[0];
-        let expt = d.key[1];
-        if (speed > 900 && expt > 3) return 'outlier';
+      .x(d3.scaleLinear().domain([min - 50, max + 50]))
+      .y(d3.scaleLinear().domain([-50, 700]))
+      .colorAccessor(function (d, i) {
+        if (d.key[2] == "UPPER") return 'outlier';
         else return 'normal';
       })
       .brushOn(false)
       .symbolSize(10)
-      .clipPadding(0)
-      .xAxisLabel('Speed', 20)
-      .yAxisLabel('EXPT')
+      .clipPadding(10)
+      .yAxisLabel('Row Value')
+      .xAxisLabel('Row Number')
       .dimension(runDimension)
       .group(speedSumGroup)
       .colors(
-        d3.scaleOrdinal().domain(['normal', 'outlier']).range(['yellow', 'red'])
+        d3.scaleOrdinal().domain(['normal', 'outlier']).range(['#8d93ab', '#ff4b5c'])
       )
-      .on('renderlet', function (chart) {
-        // rotate x-axis labels
-        chart
-          .selectAll('g.x text')
-          .attr('transform', 'translate(-10,10) rotate(315)');
-      });
+    // .on('renderlet', function (chart) {
+    //   // rotate x-axis labels
+    //   chart
+    //     .selectAll('g.x text')
+    //     .attr('transform', 'translate(-10,10) rotate(315)');
+    // });
     chart.render();
   }
 }

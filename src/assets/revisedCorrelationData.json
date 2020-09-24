@@ -1,0 +1,62 @@
+[
+  {
+    "Age": 30,
+    "Salary": 80000,
+    "Provident_Fund": 16000,
+    "Name": "Guru"
+  },
+  {
+    "Age": 30,
+    "Salary": 85000,
+    "Provident_Fund": 17000,
+    "Name": "Srini"
+  },
+  {
+    "Age": 30,
+    "Salary": 83000,
+    "Provident_Fund": 16600,
+    "Name": "Ananda"
+  },
+  {
+    "Age": 30,
+    "Salary": 81000,
+    "Provident_Fund": 16200,
+    "Name": "Richa"
+  },
+  {
+    "Age": 30,
+    "Salary": 80000,
+    "Provident_Fund": 16000,
+    "Name": "Prajyna"
+  },
+  {
+    "Age": 30,
+    "Salary": 84000,
+    "Provident_Fund": 16800,
+    "Name": "Keerthi"
+  },
+  {
+    "Age": 30,
+    "Salary": 83500,
+    "Provident_Fund": 16700,
+    "Name": "Srikanth"
+  },
+  {
+    "Age": 30,
+    "Salary": 85000,
+    "Provident_Fund": 17000,
+    "Name": "Anish"
+  },
+  {
+    "Age": 30,
+    "Salary": 81500,
+    "Provident_Fund": 16300,
+    "Name": "Akshay"
+  },
+  {
+    "Age": 30,
+    "Salary": 84500,
+    "Provident_Fund": 16900,
+    "Name": "Sandhya"
+  }
+]
